@@ -19,7 +19,19 @@ Route::get('/', function () {
 });
 
 Route::prefix('grades')->group(function () {
-    Route::get('/', [GradeController::class, 'index']);
+    Route::get('/', [GradeController::class, 'index'])->name('grades.index');
     Route::get('/create', [GradeController::class, 'create']);
+    Route::post('/store', [GradeController::class, 'store']);
     Route::get('/edit/{grade}', [GradeController::class, 'edit']);
+    Route::post('/update/{grade}', [GradeController::class, 'update']);
+});
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });

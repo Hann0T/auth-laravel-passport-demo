@@ -4,81 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Models\Grade;
 use Illuminate\Http\Request;
+use App\Http\Requests\UpdateGradeRequest;
 
 class GradeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        return view('grades.index');
+        $user = $request->user();
+
+        if ($user->can('viewAny', Grade::class)) {
+            return view('grades.index', [
+                'grades' =>
+                \App\Models\Grade::with('user')->get()
+            ]);
+        }
+
+        return view('grades.index', [
+            'grades' =>
+            \App\Models\Grade::with('user')->where('user_id', $user->id)->get()
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('grades.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Grade  $grade
-     * @return \Illuminate\Http\Response
-     */
     public function show(Grade $grade)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Grade  $grade
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Grade $grade)
     {
-        dd($grade);
-        return view('grades.edit', compact('grade'));
+        $this->authorize('update', $grade);
+
+        return view('grades.edit', ['grade' => $grade]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Grade  $grade
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Grade $grade)
+    public function update(UpdateGradeRequest $request, Grade $grade)
     {
-        //
+        $this->authorize('update', $grade);
+
+        $grade->update($request->validated());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Grade  $grade
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Grade $grade)
     {
         //
