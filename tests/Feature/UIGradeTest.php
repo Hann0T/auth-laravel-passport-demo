@@ -22,10 +22,10 @@ class UIGradeTest extends TestCase
 
         $response = $this->actingAs($user)->get('/grades');
 
-        $response->assertSeeText(e($grade1->id), false);
-        $response->assertSeeText(e($grade1->value), false);
-        $response->assertDontSeeText(e($grade2->id), false);
-        $response->assertDontSeeText(e($grade2->value), false);
+        $response->assertSeeText(e('Id: ' . $grade1->id), false);
+        $response->assertSeeText(e('nota: ' . $grade1->value), false);
+        $response->assertDontSeeText(e('Id: ' . $grade2->id), false);
+        $response->assertDontSeeText(e('nota: ' . $grade2->value), false);
     }
 
     /** @test */
