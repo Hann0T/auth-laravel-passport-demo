@@ -29,5 +29,16 @@ class AuthServiceProvider extends ServiceProvider
         if (!$this->app->routesAreCached()) {
             Passport::routes();
         }
+
+        Passport::tokensExpireIn(now()->addDays(15));
+        Passport::refreshTokensExpireIn(now()->addDays(30));
+        Passport::personalAccessTokensExpireIn(now()->addMonths(6));
+
+        Passport::tokensCan([
+            'update-grades' => 'Can update grades',
+            'view-grades' => 'Can view grades',
+            'scope-1' => 'test scope-1',
+            'scope-2' => 'test scope-2'
+        ]);
     }
 }

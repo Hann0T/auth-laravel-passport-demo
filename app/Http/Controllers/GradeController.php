@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GradeUpdated;
 use App\Models\Grade;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateGradeRequest;
@@ -13,16 +14,11 @@ class GradeController extends Controller
         $user = $request->user();
 
         if ($user->can('viewAny', Grade::class)) {
-            return view('grades.index', [
-                'grades' =>
-                \App\Models\Grade::with('user')->get()
-            ]);
+            return \App\Models\Grade::with('user')->get();
         }
 
-        return view('grades.index', [
-            'grades' =>
-            \App\Models\Grade::with('user')->where('user_id', $user->id)->get()
-        ]);
+        return \App\Models\Grade::with('user')
+            ->where('user_id', $user->id)->get();
     }
 
     public function create()
@@ -51,7 +47,10 @@ class GradeController extends Controller
     {
         $this->authorize('update', $grade);
 
+        $prevGrade = clone $grade;
         $grade->update($request->validated());
+
+        GradeUpdated::dispatch($prevGrade, $grade);
     }
 
     public function destroy(Grade $grade)

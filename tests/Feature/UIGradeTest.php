@@ -40,6 +40,14 @@ class UIGradeTest extends TestCase
             ->get('/grades/edit/' . $grade1->id);
 
         $response->assertForbidden();
+
+        $response = $this->actingAs($user)->post(
+            '/grades/update/' . $grade1->id,
+            [
+                'value' => 123123
+            ]
+        );
+        $response->assertForbidden();
     }
 
     /** @test */
@@ -63,10 +71,5 @@ class UIGradeTest extends TestCase
             ]
         );
         $response->assertOk();
-    }
-
-    public function teacher_cannot_edit_the_user_id()
-    {
-        // TODO
     }
 }

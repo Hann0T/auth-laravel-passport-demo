@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\PassportClientsController;
+use App\Http\Controllers\PassportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PassportClientsController::class, 'index'])
+    ->middleware(['auth']);
 
 Route::prefix('grades')->group(function () {
     Route::get('/', [GradeController::class, 'index'])->name('grades.index');
@@ -34,4 +35,8 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+});
+
+Route::prefix('passport')->group(function () {
+    Route::get('/redirect', [PassportController::class, 'redirect']);
 });

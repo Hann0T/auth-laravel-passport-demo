@@ -18,7 +18,7 @@ class GradePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+        return $user->isTeacher() || $user->isAdmin();
     }
 
     /**
