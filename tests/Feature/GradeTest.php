@@ -80,7 +80,6 @@ class GradeTest extends TestCase
         $this->assertEquals(403, $response->status());
     }
 
-    /** @test */
     public function event_api_will_be_dispatched_on_grade_update()
     {
         Event::fake();
@@ -100,7 +99,7 @@ class GradeTest extends TestCase
                 ]
             );
 
-        // $this->assertEquals(200, $response->status());
-        // Event::assertDispatched(GradeUpdatedApi::class);
+        $this->assertEquals(200, $response->status());
+        Event::assertDispatched(GradeUpdatedApi::class);
     }
 }

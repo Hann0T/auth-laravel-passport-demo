@@ -14,11 +14,17 @@ class GradeController extends Controller
         $user = $request->user();
 
         if ($user->can('viewAny', Grade::class)) {
-            return \App\Models\Grade::with('user')->get();
+            return view('grades.index', [
+                'grades' =>
+                \App\Models\Grade::with('user')->get()
+            ]);
         }
 
-        return \App\Models\Grade::with('user')
-            ->where('user_id', $user->id)->get();
+        return view('grades.index', [
+            'grades' =>
+            \App\Models\Grade::with('user')
+                ->where('user_id', $user->id)->get()
+        ]);
     }
 
     public function create()
