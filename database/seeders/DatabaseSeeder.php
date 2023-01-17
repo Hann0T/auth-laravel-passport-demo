@@ -25,5 +25,15 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'role' => 'admin'
         ]);
+
+        $student = \App\Models\User::factory()->create([
+            'name' => 'student User',
+            'email' => 'student@example.com',
+            'role' => 'student'
+        ]);
+
+        $student->grades()->saveMany(\App\Models\Grade::factory(3)->create([
+            'user_id' => $student->id
+        ]));
     }
 }
